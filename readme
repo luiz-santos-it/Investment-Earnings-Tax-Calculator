@@ -25,6 +25,8 @@ Este projeto é uma solução para o desafio técnico que calcula o imposto sobr
 
 ### Escolhas Técnicas
 
+- **Docker Multi-Stage Build**: A decisão de usar multi-stage builds no Docker foi adotada para otimizar o processo de construção da imagem, proporcionando uma redução no tamanho final da imagem. Esse método permite incluir apenas os artefatos necessários para a execução da aplicação, resultando em imagens mais enxutas.
+
 - **Linguagem**: Escolhi JavaScript (Node.js) por estar mais familiarizado e por ser uma ótima opção para criar aplicações CLI devido à facilidade de implementação. Além disso, Node.js usa um modelo de I/O não-bloqueante e orientado a eventos, o que o torna altamente eficiente para operações de entrada/saída como leitura e escrita de arquivos. O código utiliza o módulo readline em conjunto com fs.createReadStream para ler e processar o arquivo linha por linha de maneira eficiente. O módulo readline cria uma interface de leitura baseada em eventos ('line' e 'close'), permitindo que o programa continue a execução de outras tarefas enquanto processa as linhas do arquivo.
 
 - **Versão do Node.js**: A versão Node.js 18 é obrigatória para este projeto devido aos recursos avançados que oferece:
@@ -43,8 +45,9 @@ Este projeto é uma solução para o desafio técnico que calcula o imposto sobr
 A estrutura de diretórios do projeto foi modularizada, com foco nas funcionalidades do negócio. Essa abordagem facilita a manutenção, escalabilidade e entendimento do código. A modularização ajuda a manter as responsabilidades bem definidas e separadas, tornando o código mais legível e fácil de testar.
 
 - **src/**: Contém o código fonte da aplicação, organizado em módulos.
-- **domain/**: Contém a lógica de negócio.
-- **application/**: Realiza gerenciamento do estado e a coordenação das operações.
+  - **domain/**: Contém a lógica de negócio.
+  - **application/**: Realiza gerenciamento do estado e a coordenação das operações.
+  - **infra/**: Contém o entrypoint da aplicação (index.js), que utiliza readline para leitura de arquivos, e fábricas de objeto.
 - **test/**: Contém os testes unitários e de integração.
 - **Dockerfile**: Define o ambiente docker para construir e executar a aplicação.
 - **package.json**: Gerencia as dependências do projeto e scripts de execução.
@@ -69,49 +72,66 @@ Utilizei o padrão de projeto Strategy para encapsular os algoritmos de cálculo
 
 1. **Construir a Imagem Docker**:
 
-   ```sh
+```sh
    docker build -t capital-gains-calculator .
-   ```
+```
 
 2. **Executar o Contêiner**:
-   ```sh
+
+```sh
    docker run -it --rm capital-gains-calculator
-   ```
+```
 
 ### Sem Docker
 
 1. **Instalar Dependências**:
 
-   ```sh
+```sh
    npm install
-   ```
+```
 
 2. **Executar a Aplicação**:
-   ```sh
+
+```sh
    npm start
-   ```
+```
 
 ## Instruções para Executar os Testes
 
 ### Usando Docker
 
 1. **Executar os Testes**:
-   ```sh
+
+```sh
    docker run -it --rm capital-gains-calculator npm test
-   ```
+```
 
 ### Sem Docker
 
 1. **Executar os Testes**:
-   ```sh
+
+```sh
    npm test
-   ```
+```
 
 ## Notas Adicionais
 
 - Certifique-se de que a entrada esteja no formato correto, conforme especificado no desafio.
 - A imagem Docker é baseada em Node.js 18 e inclui todas as dependências necessárias para executar a aplicação e os testes.
 - Nenhuma biblioteca ou framework externo foi utilizado.
+- Por padrão, a aplicação utiliza o arquivo inputs/input.txt como entrada. Se desejar usar um arquivo diferente, forneça o caminho do arquivo ao executar o comando npm start ou ao rodar o contêiner Docker.
+
+Com npm start:
+
+```sh
+npm start path/to/your/input-file.txt
+```
+
+Com docker
+
+```sh
+docker run -it --rm capital-gains-calculator path/to/your/input-file.txt
+```
 
 ## Requisitos Para Rodar o Sistema
 
