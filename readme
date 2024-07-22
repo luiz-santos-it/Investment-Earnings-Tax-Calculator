@@ -1,0 +1,119 @@
+# Capital Gains Calculator
+
+## Descrição
+
+Este projeto é uma solução para o desafio técnico que calcula o imposto sobre ganho de capital em operações no mercado financeiro de ações. O programa lê operações de compra e venda de ações em formato JSON da entrada padrão (stdin) e calcula o imposto devido conforme as regras especificadas. A saída do programa é uma lista de objetos JSON, cada um representando o imposto calculado para uma operação correspondente, e é enviada para a saída padrão (stdout).
+
+### Exemplo de Entrada e Saída
+
+#### Entrada
+
+```json
+[
+  { "operation": "buy", "unit-cost": 10.0, "quantity": 10000 },
+  { "operation": "sell", "unit-cost": 20.0, "quantity": 5000 }
+]
+```
+
+#### Saída
+
+```json
+[{ "tax": 0 }, { "tax": 10000 }]
+```
+
+## Decisões Técnicas e Arquiteturais
+
+### Escolhas Técnicas
+
+- **Linguagem**: Escolhi JavaScript (Node.js) por estar mais familiarizado e por ser uma ótima opção para criar aplicações CLI devido à facilidade de implementação. Além disso, Node.js usa um modelo de I/O não-bloqueante e orientado a eventos, o que o torna altamente eficiente para operações de entrada/saída como leitura e escrita de arquivos. O código utiliza o módulo readline em conjunto com fs.createReadStream para ler e processar o arquivo linha por linha de maneira eficiente. O módulo readline cria uma interface de leitura baseada em eventos ('line' e 'close'), permitindo que o programa continue a execução de outras tarefas enquanto processa as linhas do arquivo.
+
+- **Versão do Node.js**: A versão Node.js 18 é obrigatória para este projeto devido aos recursos avançados que oferece:
+  - **Modificadores de acesso em fields e métodos**: Permitem encapsulamento adequado das propriedades e dos métodos das classes.
+  - **Biblioteca padrão `assert`**: Utilizada para realizar asserções nos testes, eliminando a necessidade de bibliotecas externas para testes.
+  - **Alias de caminho no `package.json`**: Facilita a organização dos imports e melhora a legibilidade do código:
+    ```json
+    "imports": {
+      "#domain/*": "./src/domain/*",
+      "#application/*": "./src/application/*"
+    }
+    ```
+
+### Estrutura do Projeto
+
+A estrutura de diretórios do projeto foi modularizada, com foco nas funcionalidades do negócio. Essa abordagem facilita a manutenção, escalabilidade e entendimento do código. A modularização ajuda a manter as responsabilidades bem definidas e separadas, tornando o código mais legível e fácil de testar.
+
+- **src/**: Contém o código fonte da aplicação, organizado em módulos.
+- **domain/**: Contém a lógica de negócio.
+- **application/**: Realiza gerenciamento do estado e a coordenação das operações.
+- **test/**: Contém os testes unitários e de integração.
+- **Dockerfile**: Define o ambiente docker para construir e executar a aplicação.
+- **package.json**: Gerencia as dependências do projeto e scripts de execução.
+
+#### Classe Base para Operação
+
+Para facilitar a extensibilidade e a manutenção do código, optei por utilizar uma classe base para as operações. Esta decisão permite a criação de novas operações, que podem herdar funcionalidades comuns da classe base, promovendo reutilização de código.
+
+- **Extensibilidade**: Separar operações por subclasses facilita a adição de novas operações no futuro. Ademais, a utilização de uma classe base coloca em prática o princípio Open-Closed do SOLID, em que, ao criar uma nova operação como 'loan', por exemplo, não é necessário modificar classes existentes, mas sim estender a classe base.
+- **Factory Design Pattern**: Apliquei o padrão de projeto Factory para criar operações específicas. Este padrão permite a criação de objetos sem expor a lógica de instanciamento, tornando o sistema mais flexível para a introdução de novas operações.
+
+#### Strategy Design Pattern
+
+Utilizei o padrão de projeto Strategy para encapsular os algoritmos de cálculo de imposto, permitindo que diferentes operações utilizem diferentes estratégias de cálculo.
+
+- **Flexibilidade**: O uso do Strategy pattern permite que o cálculo de imposto seja facilmente alterado ou estendido no futuro. Por exemplo, o cálculo de imposto pode variar dependendo do tipo da operação, região, ou outras regras que possam ser introduzidas.
+- **Escalabilidade**: A ênfase do desafio em falar de escalabilidade durante a etapa de pair programming sugere que o sistema deve ser preparado para mudanças. Ao usar o Strategy pattern, o sistema pode facilmente acomodar novas regras de cálculo de imposto sem grandes refatorações, promovendo um design robusto e escalável.
+
+## Instruções para Compilar e Executar o Projeto
+
+### Usando Docker
+
+1. **Construir a Imagem Docker**:
+
+   ```sh
+   docker build -t capital-gains-calculator .
+   ```
+
+2. **Executar o Contêiner**:
+   ```sh
+   docker run -it --rm capital-gains-calculator
+   ```
+
+### Sem Docker
+
+1. **Instalar Dependências**:
+
+   ```sh
+   npm install
+   ```
+
+2. **Executar a Aplicação**:
+   ```sh
+   npm start
+   ```
+
+## Instruções para Executar os Testes
+
+### Usando Docker
+
+1. **Executar os Testes**:
+   ```sh
+   docker run -it --rm capital-gains-calculator npm test
+   ```
+
+### Sem Docker
+
+1. **Executar os Testes**:
+   ```sh
+   npm test
+   ```
+
+## Notas Adicionais
+
+- Certifique-se de que a entrada esteja no formato correto, conforme especificado no desafio.
+- A imagem Docker é baseada em Node.js 18 e inclui todas as dependências necessárias para executar a aplicação e os testes.
+- Nenhuma biblioteca ou framework externo foi utilizado.
+
+## Requisitos Para Rodar o Sistema
+
+- Node.js (v18 ou superior): https://nodejs.org
+- Docker(opcional): https://docs.docker.com/get-docker
