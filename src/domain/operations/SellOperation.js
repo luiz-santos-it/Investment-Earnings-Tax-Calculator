@@ -1,5 +1,5 @@
-import Operation from './Operation.js';
-import StandardTaxStrategy from '../tax/StandardTaxStrategy.js';
+import Operation from "./Operation.js";
+import StandardTaxStrategy from "../tax/StandardTaxStrategy.js";
 
 export default class SellOperation extends Operation {
   #taxStrategy;
@@ -11,11 +11,15 @@ export default class SellOperation extends Operation {
 
   execute(operation, state) {
     const totalSaleValue = operation.unitCost * operation.quantity;
-    const gainOrLoss = (operation.unitCost - state.averagePrice) * operation.quantity;
+    const gainOrLoss =
+      (operation.unitCost - state.averagePrice) * operation.quantity;
 
     state.sharesQuantity -= operation.quantity;
 
-    const adjustedProfit = this.#updateLossAndCalculateAdjustedProfit(gainOrLoss, state);
+    const adjustedProfit = this.#updateLossAndCalculateAdjustedProfit(
+      gainOrLoss,
+      state
+    );
 
     return {
       tax: this.#taxStrategy.calculateTax({ totalSaleValue, adjustedProfit }),
@@ -30,7 +34,7 @@ export default class SellOperation extends Operation {
       const adjustedGainOrLoss = gainOrLoss + state.totalLoss;
       state.totalLoss = Math.min(adjustedGainOrLoss, 0);
 
-      return Math.max(adjustedGainOrLoss, 0);
+      return this.roundToTwoDecimals(Math.max(adjustedGainOrLoss, 0));
     } else {
       return gainOrLoss;
     }
