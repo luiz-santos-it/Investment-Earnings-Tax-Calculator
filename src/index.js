@@ -30,13 +30,21 @@ function main() {
 
   readLineInterface.on('line', (line) => {
     if (!line.trim()) {
-      return null;
+      return;
     }
 
-    const result = operationService.process(convertLineToOperations(line));
+    const operations = convertLineToOperations(line);
 
-    if (result !== null) {
+    if (!operations) {
+      return;
+    }
+
+    try {
+      const result = operationService.process(operations);
       console.log(JSON.stringify(result));
+    } catch (error) {
+      console.error(`Error processing line: ${line}`);
+      console.error(error);
     }
   });
 
