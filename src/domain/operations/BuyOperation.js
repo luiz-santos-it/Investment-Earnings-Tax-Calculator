@@ -1,4 +1,4 @@
-import Operation from './Operation';
+import Operation from './Operation.js';
 
 export default class BuyOperation extends Operation {
   execute(operation, state) {

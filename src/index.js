@@ -1,11 +1,9 @@
 import readline from 'readline';
-import StockOperationDTO from './dtos/StockOperationDTO';
-import StockOperationProcessor from './processor/StockOperationProcessor';
-import OperationService from './services/OperationService';
+import StockOperationDTO from './shared/dtos/StockOperationDTO';
+import OperationService from './application/services/OperationService';
 
 function main() {
   const operationService = new OperationService();
-  const stockProcessor = new StockOperationProcessor(operationService);
 
   const readLineInterface = readline.createInterface({
     input: process.stdin,
@@ -40,7 +38,7 @@ function main() {
 
   readLineInterface.on('close', () => {
     batch.forEach((operations) => {
-      console.log(stockProcessor.process(operations));
+      console.log(operationService.process(operations));
     });
   });
 }

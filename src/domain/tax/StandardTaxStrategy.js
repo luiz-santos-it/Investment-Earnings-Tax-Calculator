@@ -1,4 +1,4 @@
-import TaxStrategy from './TaxStrategy';
+import TaxStrategy from './TaxStrategy.js';
 
 export default class StandardTaxStrategy extends TaxStrategy {
   #transactionExemptionThreshold;

@@ -1,5 +1,5 @@
-import Operation from './Operation';
-import StandardTaxStrategy from '../services/StandardTaxStrategy';
+import Operation from './Operation.js';
+import StandardTaxStrategy from '../tax/StandardTaxStrategy.js';
 
 export default class SellOperation extends Operation {
   #taxStrategy;

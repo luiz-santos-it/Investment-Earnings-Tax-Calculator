@@ -1,7 +1,13 @@
-FROM node:16
+FROM node:18
+
 WORKDIR /usr/src/app
+
 COPY package*.json ./
+
 RUN npm install
+
 COPY . .
-EXPOSE 8080
-CMD ["node", "src/entryPoint.js"]
+
+ENV NODE_PATH=/usr/src/app/src
+
+CMD ["npm", "test"]

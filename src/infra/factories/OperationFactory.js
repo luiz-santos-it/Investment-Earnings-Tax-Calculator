@@ -1,6 +1,6 @@
-import OperationType from '../enums/OperationType';
-import BuyOperation from '../operations/BuyOperation';
-import SellOperation from '../operations/SellOperation';
+import OperationType from '../../shared/enums/OperationType.js';
+import BuyOperation from '../../domain/operations/BuyOperation.js';
+import SellOperation from '../../domain/operations/SellOperation.js';
 
 const createOperation = (operationType) => {
   switch (operationType) {
