@@ -1,45 +1,47 @@
+import fs from 'fs';
 import readline from 'readline';
-import StockOperationDTO from './shared/dtos/StockOperationDTO';
-import OperationService from './application/services/OperationService';
+import StockOperationDTO from './shared/dtos/StockOperationDTO.js';
+import OperationService from './application/services/OperationService.js';
+
+function convertLineToOperations(line) {
+  const stockOperationsBatch = JSON.parse(line);
+  return stockOperationsBatch.map(
+    (stockOperationData) => new StockOperationDTO(stockOperationData),
+  );
+}
 
 function main() {
+  const args = process.argv.slice(2);
+  const defaultFilePath = 'inputs/input.txt';
+  const filePath = args[0] || defaultFilePath;
+
+  if (!fs.existsSync(filePath)) {
+    console.error(`File not found: ${filePath}`);
+    process.exit(1);
+  }
+
   const operationService = new OperationService();
 
   const readLineInterface = readline.createInterface({
-    input: process.stdin,
+    input: fs.createReadStream(filePath),
     output: process.stdout,
     terminal: false,
   });
 
-  let lineIndex = 0;
-  let batch = [];
-  readLineInterface.on('line', (inputLine) => {
-    if (!inputLine.trim()) {
-      return;
+  readLineInterface.on('line', (line) => {
+    if (!line.trim()) {
+      return null;
     }
 
-    if (inputLine == 'end') {
-      readLineInterface.close();
-      return;
+    const result = operationService.process(convertLineToOperations(line));
+
+    if (result !== null) {
+      console.log(JSON.stringify(result));
     }
-
-    const stockOperationsBatch = JSON.parse(inputLine);
-
-    stockOperationsBatch.forEach((stockOperationData) => {
-      if (!batch[lineIndex]) {
-        batch[lineIndex] = [];
-      }
-
-      batch[lineIndex].push(new StockOperationDTO(stockOperationData));
-    });
-
-    lineIndex++;
   });
 
   readLineInterface.on('close', () => {
-    batch.forEach((operations) => {
-      console.log(operationService.process(operations));
-    });
+    console.log('Processing completed.');
   });
 }
 
