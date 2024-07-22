@@ -1,38 +1,18 @@
 export default class StockOperationProcessor {
-  #operationsBatch;
-  #stockOperationFactories;
+  #operationService;
 
-  constructor(stockOperationFactories) {
-    this.#stockOperationFactories = stockOperationFactories;
-    this.#operationsBatch = [];
+  constructor(operationService) {
+    this.#operationService = operationService;
   }
 
-  addOperation(line, operation) {
-    if (!this.#operationsBatch[line]) {
-      this.#operationsBatch[line] = [];
-    }
+  process(operations) {
+    this.#operationService.resetState();
+    let results = [];
 
-    this.#operationsBatch[line].push(operation);
-  }
-
-  processOperations() {
-    let processedOperations = [];
-
-    this.#operationsBatch.forEach((operationTransaction) => {
-      const handlerFactory = this.#stockOperationFactories.createOperationHandlerFactory();
-
-      operationTransaction.forEach((operationData) => {
-        const handler = handlerFactory.createHandler(operationData.operation);
-
-        if (handler) {
-          const processedOperation = handler.handle(operationData);
-
-          console.log(`Processed operation: ${JSON.stringify(processedOperation)}`);
-          processedOperations.push(processedOperation);
-        }
-      });
+    operations.forEach((operation) => {
+      results.push(this.#operationService.process(operation));
     });
 
-    return processedOperations;
+    return results;
   }
 }

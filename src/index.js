@@ -1,9 +1,11 @@
 import readline from 'readline';
-import StockOperationFactories from './factories/StockOperationFactories';
+import StockOperationDTO from './dtos/StockOperationDTO';
+import StockOperationProcessor from './processor/StockOperationProcessor';
+import OperationService from './services/OperationService';
 
 function main() {
-  const stockOperationFactories = new StockOperationFactories();
-  const stockProcessor = stockOperationFactories.createStockProcessor();
+  const operationService = new OperationService();
+  const stockProcessor = new StockOperationProcessor(operationService);
 
   const readLineInterface = readline.createInterface({
     input: process.stdin,
@@ -12,31 +14,34 @@ function main() {
   });
 
   let lineIndex = 0;
-
+  let batch = [];
   readLineInterface.on('line', (inputLine) => {
-    if (inputLine.trim()) {
-      if (inputLine == 'end') {
-        readLineInterface.close();
-        return;
+    if (!inputLine.trim()) {
+      return;
+    }
+
+    if (inputLine == 'end') {
+      readLineInterface.close();
+      return;
+    }
+
+    const stockOperationsBatch = JSON.parse(inputLine);
+
+    stockOperationsBatch.forEach((stockOperationData) => {
+      if (!batch[lineIndex]) {
+        batch[lineIndex] = [];
       }
 
-      const stockOperationsBatch = JSON.parse(inputLine);
-      stockOperationsBatch.forEach((stockOperationData) => {
-        stockProcessor.addOperation(
-          lineIndex,
-          stockOperationFactories.createStockOperationDTO(stockOperationData),
-        );
-      });
+      batch[lineIndex].push(new StockOperationDTO(stockOperationData));
+    });
 
-      lineIndex++;
-    }
+    lineIndex++;
   });
 
   readLineInterface.on('close', () => {
-    const result = stockProcessor.processOperations();
-    console.log('🚀 ~ readLineInterface.on ~ result:', result);
-
-    console.log('Stocks processed successfully!');
+    batch.forEach((operations) => {
+      console.log(stockProcessor.process(operations));
+    });
   });
 }
 
