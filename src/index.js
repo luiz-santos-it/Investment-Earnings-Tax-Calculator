@@ -1,18 +1,18 @@
-import fs from 'fs';
-import readline from 'readline';
-import StockOperationDTO from './shared/dtos/StockOperationDTO.js';
-import OperationService from './application/services/OperationService.js';
+import fs from "fs";
+import readline from "readline";
+import StockOperationDTO from "./shared/dtos/StockOperationDTO.js";
+import OperationService from "./application/services/OperationService.js";
 
 function convertLineToOperations(line) {
   const stockOperationsBatch = JSON.parse(line);
   return stockOperationsBatch.map(
-    (stockOperationData) => new StockOperationDTO(stockOperationData),
+    (stockOperationData) => new StockOperationDTO(stockOperationData)
   );
 }
 
 function main() {
   const args = process.argv.slice(2);
-  const defaultFilePath = 'inputs/input.txt';
+  const defaultFilePath = "inputs/input.txt";
   const filePath = args[0] || defaultFilePath;
 
   if (!fs.existsSync(filePath)) {
@@ -28,7 +28,7 @@ function main() {
     terminal: false,
   });
 
-  readLineInterface.on('line', (line) => {
+  readLineInterface.on("line", (line) => {
     if (!line.trim()) {
       return;
     }
@@ -48,8 +48,8 @@ function main() {
     }
   });
 
-  readLineInterface.on('close', () => {
-    console.log('Processing completed.');
+  readLineInterface.on("close", () => {
+    console.error("Processing completed.");
   });
 }
 
