@@ -1,3 +1,4 @@
+
 # Capital Gains Calculator
 
 ## Description
@@ -72,29 +73,29 @@ I used the Strategy design pattern to encapsulate tax calculation algorithms, al
 
 1. **Build the Docker Image**:
 
-```sh
-   docker build -t capital-gains-calculator .
-```
+    ```sh
+    docker build -t capital-gains-calculator .
+    ```
 
 2. **Run the Container**:
 
-```sh
-   docker run -it --rm capital-gains-calculator
-```
+    ```sh
+    docker run -it --rm capital-gains-calculator
+    ```
 
 ### Without Docker
 
 1. **Install Dependencies**:
 
-```sh
-   npm install
-```
+    ```sh
+    npm install
+    ```
 
 2. **Run the Application**:
 
-```sh
-   npm start
-```
+    ```sh
+    npm start
+    ```
 
 ## Instructions to Run Tests
 
@@ -102,36 +103,36 @@ I used the Strategy design pattern to encapsulate tax calculation algorithms, al
 
 1. **Run the Tests**:
 
-```sh
-   docker run -it --rm capital-gains-calculator npm test
-```
+    ```sh
+    docker run -it --rm capital-gains-calculator npm test
+    ```
 
 ### Without Docker
 
 1. **Run the Tests**:
 
-```sh
-   npm test
-```
+    ```sh
+    npm test
+    ```
 
 ## Additional Notes
 
 - Ensure the input is in the correct format as specified.
 - The Docker image is based on Node.js 18 and includes all necessary dependencies to run the application and tests.
 - No external libraries or frameworks were used.
-- By default, the application uses the file inputs/input.txt as input. If you want to use a different file, provide the file path when running the npm start command or when running the Docker container.
+- By default, the application uses the file `inputs/input.txt` as input. If you want to use a different file, provide the file path when running the `npm start` command or when running the Docker container.
 
-Using npm start:
+    Using npm start:
 
-```sh
-npm start path/to/your/input-file.txt
-```
+    ```sh
+    npm start path/to/your/input-file.txt
+    ```
 
-Using Docker:
+    Using Docker:
 
-```sh
-docker run -it --rm capital-gains-calculator path/to/your/input-file.txt
-```
+    ```sh
+    docker run -it --rm capital-gains-calculator path/to/your/input-file.txt
+    ```
 
 ## System Requirements
 
