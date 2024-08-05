@@ -1,12 +1,12 @@
 # Capital Gains Calculator
 
-## Descrição
+## Description
 
-Este projeto é uma solução para o desafio técnico que calcula o imposto sobre ganho de capital em operações no mercado financeiro de ações. O programa lê operações de compra e venda de ações em formato JSON da entrada padrão (stdin) e calcula o imposto devido conforme as regras especificadas. A saída do programa é uma lista de objetos JSON, cada um representando o imposto calculado para uma operação correspondente, e é enviada para a saída padrão (stdout).
+This project calculates the capital gains tax on stock market operations. The program reads buy and sell operations in JSON format from standard input (stdin) and calculates the tax owed according to specified rules. The program's output is a list of JSON objects, each representing the calculated tax for the corresponding operation, and it is sent to standard output (stdout).
 
-### Exemplo de Entrada e Saída
+### Example Input and Output
 
-#### Entrada
+#### Input
 
 ```json
 [
@@ -15,24 +15,24 @@ Este projeto é uma solução para o desafio técnico que calcula o imposto sobr
 ]
 ```
 
-#### Saída
+#### Output
 
 ```json
 [{ "tax": 0 }, { "tax": 10000 }]
 ```
 
-## Decisões Técnicas e Arquiteturais
+## Technical and Architectural Decisions
 
-### Escolhas Técnicas
+### Technical Choices
 
-- **Docker Multi-Stage Build**: A decisão de usar multi-stage builds no Docker foi adotada para otimizar o processo de construção da imagem, proporcionando uma redução no tamanho final da imagem. Esse método permite incluir apenas os artefatos necessários para a execução da aplicação, resultando em imagens mais enxutas.
+- **Docker Multi-Stage Build**: The decision to use multi-stage builds in Docker was made to optimize the image build process, reducing the final image size. This method includes only the necessary artifacts for running the application, resulting in leaner images.
 
-- **Linguagem**: Escolhi JavaScript (Node.js) por estar mais familiarizado e por ser uma ótima opção para criar aplicações CLI devido à facilidade de implementação. Além disso, Node.js usa um modelo de I/O não-bloqueante e orientado a eventos, o que o torna altamente eficiente para operações de entrada/saída como leitura e escrita de arquivos. O código utiliza o módulo readline em conjunto com fs.createReadStream para ler e processar o arquivo linha por linha de maneira eficiente. O módulo readline cria uma interface de leitura baseada em eventos ('line' e 'close'), permitindo que o programa continue a execução de outras tarefas enquanto processa as linhas do arquivo.
+- **Language**: I chose JavaScript (Node.js) for its familiarity and suitability for creating CLI applications due to its ease of implementation. Node.js uses a non-blocking, event-driven I/O model, making it highly efficient for input/output operations like file reading and writing. The code utilizes the readline module in combination with fs.createReadStream to efficiently read and process the file line by line. The readline module creates an event-driven interface ('line' and 'close'), allowing the program to continue executing other tasks while processing file lines.
 
-- **Versão do Node.js**: A versão Node.js 18 é obrigatória para este projeto devido aos recursos avançados que oferece:
-  - **Modificadores de acesso em fields e métodos**: Permitem encapsulamento adequado das propriedades e dos métodos das classes.
-  - **Biblioteca padrão `assert`**: Utilizada para realizar asserções nos testes, eliminando a necessidade de bibliotecas externas para testes.
-  - **Alias de caminho no `package.json`**: Facilita a organização dos imports e melhora a legibilidade do código:
+- **Node.js Version**: Node.js 18 is required for this project due to its advanced features:
+  - **Access Modifiers for Fields and Methods**: Allow proper encapsulation of class properties and methods.
+  - **Built-in `assert` Library**: Used for assertions in tests, eliminating the need for external testing libraries.
+  - **Path Alias in `package.json`**: Simplifies the organization of imports and improves code readability:
     ```json
     "imports": {
       "#domain/*": "./src/domain/*",
@@ -40,100 +40,100 @@ Este projeto é uma solução para o desafio técnico que calcula o imposto sobr
     }
     ```
 
-### Estrutura do Projeto
+### Project Structure
 
-A estrutura de diretórios do projeto foi modularizada, com foco nas funcionalidades do negócio. Essa abordagem facilita a manutenção, escalabilidade e entendimento do código. A modularização ajuda a manter as responsabilidades bem definidas e separadas, tornando o código mais legível e fácil de testar.
+The project's directory structure is modularized, focusing on business functionalities. This approach facilitates maintenance, scalability, and understanding of the code. Modularization helps keep responsibilities well-defined and separated, making the code more readable and easier to test.
 
-- **src/**: Contém o código fonte da aplicação, organizado em módulos.
-  - **domain/**: Contém a lógica de negócio.
-  - **application/**: Realiza gerenciamento do estado e a coordenação das operações.
-  - **infra/**: Contém o entrypoint da aplicação (index.js), que utiliza readline para leitura de arquivos, e fábricas de objeto.
-- **test/**: Contém os testes unitários e de integração.
-- **Dockerfile**: Define o ambiente docker para construir e executar a aplicação.
-- **package.json**: Gerencia as dependências do projeto e scripts de execução.
+- **src/**: Contains the application source code, organized into modules.
+  - **domain/**: Contains business logic.
+  - **application/**: Manages state and coordinates operations.
+  - **infra/**: Contains the application entry point (index.js), which uses readline for file reading, and object factories.
+- **test/**: Contains unit and integration tests.
+- **Dockerfile**: Defines the Docker environment to build and run the application.
+- **package.json**: Manages project dependencies and execution scripts.
 
-#### Classe Base para Operação
+#### Base Class for Operations
 
-Para facilitar a extensibilidade e a manutenção do código, optei por utilizar uma classe base para as operações. Esta decisão permite a criação de novas operações, que podem herdar funcionalidades comuns da classe base, promovendo reutilização de código.
+To facilitate extensibility and code maintenance, I opted to use a base class for operations. This decision allows the creation of new operations that can inherit common functionalities from the base class, promoting code reuse.
 
-- **Extensibilidade**: Separar operações por subclasses facilita a adição de novas operações no futuro. Ademais, a utilização de uma classe base coloca em prática o princípio Open-Closed do SOLID, em que, ao criar uma nova operação como 'loan', por exemplo, não é necessário modificar classes existentes, mas sim estender a classe base.
-- **Factory Design Pattern**: Apliquei o padrão de projeto Factory para criar operações específicas. Este padrão permite a criação de objetos sem expor a lógica de instanciamento, tornando o sistema mais flexível para a introdução de novas operações.
+- **Extensibility**: Separating operations into subclasses makes it easier to add new operations in the future. Additionally, using a base class puts the Open-Closed Principle of SOLID into practice, where creating a new operation like 'loan' does not require modifying existing classes but extending the base class.
+- **Factory Design Pattern**: I applied the Factory design pattern to create specific operations. This pattern allows object creation without exposing the instantiation logic, making the system more flexible for introducing new operations.
 
 #### Strategy Design Pattern
 
-Utilizei o padrão de projeto Strategy para encapsular os algoritmos de cálculo de imposto, permitindo que diferentes operações utilizem diferentes estratégias de cálculo.
+I used the Strategy design pattern to encapsulate tax calculation algorithms, allowing different operations to use different calculation strategies.
 
-- **Flexibilidade**: O uso do Strategy pattern permite que o cálculo de imposto seja facilmente alterado ou estendido no futuro. Por exemplo, o cálculo de imposto pode variar dependendo do tipo da operação, região, ou outras regras que possam ser introduzidas.
-- **Escalabilidade**: A ênfase do desafio em falar de escalabilidade durante a etapa de pair programming sugere que o sistema deve ser preparado para mudanças. Ao usar o Strategy pattern, o sistema pode facilmente acomodar novas regras de cálculo de imposto sem grandes refatorações, promovendo um design robusto e escalável.
+- **Flexibility**: The Strategy pattern allows tax calculation to be easily changed or extended in the future. For example, tax calculation may vary depending on the type of operation, region, or other rules that may be introduced.
+- **Scalability**: By using the Strategy pattern, the system can easily accommodate new tax calculation rules without major refactoring, promoting a robust and scalable design.
 
-## Instruções para Compilar e Executar o Projeto
+## Instructions to Build and Run the Project
 
-### Usando Docker
+### Using Docker
 
-1. **Construir a Imagem Docker**:
+1. **Build the Docker Image**:
 
 ```sh
    docker build -t capital-gains-calculator .
 ```
 
-2. **Executar o Contêiner**:
+2. **Run the Container**:
 
 ```sh
    docker run -it --rm capital-gains-calculator
 ```
 
-### Sem Docker
+### Without Docker
 
-1. **Instalar Dependências**:
+1. **Install Dependencies**:
 
 ```sh
    npm install
 ```
 
-2. **Executar a Aplicação**:
+2. **Run the Application**:
 
 ```sh
    npm start
 ```
 
-## Instruções para Executar os Testes
+## Instructions to Run Tests
 
-### Usando Docker
+### Using Docker
 
-1. **Executar os Testes**:
+1. **Run the Tests**:
 
 ```sh
    docker run -it --rm capital-gains-calculator npm test
 ```
 
-### Sem Docker
+### Without Docker
 
-1. **Executar os Testes**:
+1. **Run the Tests**:
 
 ```sh
    npm test
 ```
 
-## Notas Adicionais
+## Additional Notes
 
-- Certifique-se de que a entrada esteja no formato correto, conforme especificado no desafio.
-- A imagem Docker é baseada em Node.js 18 e inclui todas as dependências necessárias para executar a aplicação e os testes.
-- Nenhuma biblioteca ou framework externo foi utilizado.
-- Por padrão, a aplicação utiliza o arquivo inputs/input.txt como entrada. Se desejar usar um arquivo diferente, forneça o caminho do arquivo ao executar o comando npm start ou ao rodar o contêiner Docker.
+- Ensure the input is in the correct format as specified.
+- The Docker image is based on Node.js 18 and includes all necessary dependencies to run the application and tests.
+- No external libraries or frameworks were used.
+- By default, the application uses the file inputs/input.txt as input. If you want to use a different file, provide the file path when running the npm start command or when running the Docker container.
 
-Com npm start:
+Using npm start:
 
 ```sh
 npm start path/to/your/input-file.txt
 ```
 
-Com docker
+Using Docker:
 
 ```sh
 docker run -it --rm capital-gains-calculator path/to/your/input-file.txt
 ```
 
-## Requisitos Para Rodar o Sistema
+## System Requirements
 
-- Node.js (v18 ou superior): https://nodejs.org
-- Docker(opcional): https://docs.docker.com/get-docker
+- Node.js (v18 or higher): https://nodejs.org
+- Docker (optional): https://docs.docker.com/get-docker
