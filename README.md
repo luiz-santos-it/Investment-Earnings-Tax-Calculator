@@ -1,9 +1,9 @@
 
-# Capital Gains Calculator
+# Investment Earnings Tax Calculator
 
 ## Description
 
-This project calculates the capital gains tax on stock market operations. The program reads buy and sell operations in JSON format from standard input (stdin) and calculates the tax owed according to specified rules. The program's output is a list of JSON objects, each representing the calculated tax for the corresponding operation, and it is sent to standard output (stdout).
+This project calculates the investment earnings tax on stock market operations. The program reads buy and sell operations in JSON format from standard input (stdin) and calculates the tax owed according to specified rules. The program's output is a list of JSON objects, each representing the calculated tax for the corresponding operation, and it is sent to standard output (stdout).
 
 ### Example Input and Output
 
@@ -74,13 +74,13 @@ I used the Strategy design pattern to encapsulate tax calculation algorithms, al
 1. **Build the Docker Image**:
 
     ```sh
-    docker build -t capital-gains-calculator .
+    docker build -t investment-earnings-tax-calculator .
     ```
 
 2. **Run the Container**:
 
     ```sh
-    docker run -it --rm capital-gains-calculator
+    docker run -it --rm investment-earnings-tax-calculator
     ```
 
 ### Without Docker
@@ -104,7 +104,7 @@ I used the Strategy design pattern to encapsulate tax calculation algorithms, al
 1. **Run the Tests**:
 
     ```sh
-    docker run -it --rm capital-gains-calculator npm test
+    docker run -it --rm investment-earnings-tax-calculator npm test
     ```
 
 ### Without Docker
@@ -131,7 +131,7 @@ I used the Strategy design pattern to encapsulate tax calculation algorithms, al
     Using Docker:
 
     ```sh
-    docker run -it --rm capital-gains-calculator path/to/your/input-file.txt
+    docker run -it --rm investment-earnings-tax-calculator path/to/your/input-file.txt
     ```
 
 ## System Requirements
